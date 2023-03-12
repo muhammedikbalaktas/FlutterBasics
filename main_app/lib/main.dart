@@ -4,6 +4,7 @@ import 'package:main_app/classes/increment_button.dart';
 import 'classes/list_view.dart';
 import 'classes/slide_show.dart';
 import 'classes/input_output.dart';
+import 'classes/bottom_nav.dart';
 
 void main() {
   runApp(const MyApp());
@@ -24,7 +25,7 @@ class MyApp extends StatelessWidget {
       ),
       home: Scaffold(
 
-        body: IncrementButton(),
+        body: BottomNav(),
       )
     );
   }
