@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:weather_app/classes/hour_forcast.dart';
+import 'package:weather_app/classes/rain_forcast.dart';
 import 'dart:io';
+
+import 'package:weather_app/classes/weather.dart';
+import 'package:weather_app/classes/wind_forcast.dart';
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -11,11 +16,31 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   // DateTime now= DateTime.now();
   String formattedDate = DateFormat('MMM dd').format(DateTime.now());
-  File imageFile = File('/home/muhammed/Desktop/FlutterBasics/weather_app/lib/images/sun.jpg');
+
+  
+  File imageFile = File('/home/muhammed/Desktop/FlutterBasics/weather_app/lib/images/sun.png');
+
   File cloudImage=File('/home/muhammed/Desktop/FlutterBasics/weather_app/lib/images/cloud.png');
-  File drop=File('/home/muhammed/Desktop/FlutterBasics/weather_app/lib/images/drop.png');
+  File drop=File('/home/muhammed/Desktop/FlutterBasics/weather_app/lib/images/drop1.png');
+  Weather myWeather=Weather("Yağmur",-5,-3,-8,-12,65,1100,1);
+  
   @override
+  void initState() {
+    super.initState();
+    
+    
+    
+    
+  }
+  @override
+
   Widget build(BuildContext context) {
+    List<HourForcast> forcast=myWeather.setHourlyForcast();
+    List <RainForcast> rainForcast=myWeather.setRainForcast();
+    List <WindForcast> windForcast=myWeather.setWindForcast();
+
+   
+    print("data initied");
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -24,23 +49,23 @@ class _HomePageState extends State<HomePage> {
           ),
           Row(
           children: [
-            const Expanded(
-              child: Text("11\u00B0",style: TextStyle(fontSize: 100),),
+             Expanded(
+              child: Text("${myWeather.temp} \u00B0",style: TextStyle(fontSize: 100),),
               
             ),
             Expanded(
-              child: Image.file(imageFile)
+              child: Image.file(myWeather.getImage())
             )
           ],
           ),
           Row(
-          children: const [
+          children:  [
             Expanded(
-              child: Text("Hissedilen 11\u00B0\nGece 3\u00B0 \u2193 Gündüz 3\u00B0 \u2191",style: TextStyle(fontSize: 15),),
+              child: Text("Hissedilen ${myWeather.temp}\u00B0\nGece ${myWeather.nightTemp}\u00B0 \u2193 Gündüz ${myWeather.dayTemp}\u00B0 \u2191",style: TextStyle(fontSize: 15),),
               
             ),
             Expanded(
-              child: Center(child: Text("Açık",style: TextStyle(fontSize: 50),),)
+              child: Center(child: Text(myWeather.title,style: const TextStyle(fontSize: 50),),)
             )
           ],
           ),
@@ -50,25 +75,28 @@ class _HomePageState extends State<HomePage> {
               border: Border(bottom: BorderSide(color: Colors.black,width: 1))
             ),
             child: ListView.builder(
-              itemCount: 10,
+            itemCount: 13,
             scrollDirection: Axis.horizontal, 
             itemBuilder: (BuildContext context, int index) { 
+            
+            
             return Center(
+              
               child: Column(
                 children:[
-                const Text("%40",
+                 Text("${forcast[index].temp}",
                 style: TextStyle(
                   fontSize: 15
                 ),),
                 Container(
                   decoration:const BoxDecoration(border: Border(bottom: BorderSide(width: 1,color: Colors.black))),
                   child: Image.file(
-                    cloudImage,
+                    forcast[index].getImage(),
                     width: 100,
                     height: 100,
                     ),
                 ),
-                const Text("22:00",style: TextStyle(
+                 Text("${forcast[index].hour}",style: TextStyle(
                   fontSize: 20
                 ),)
 
@@ -87,8 +115,14 @@ class _HomePageState extends State<HomePage> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: const [
                   Text("Güncel Detaylar",
+                  style: TextStyle(
+                    fontSize: 25
+                  ),
+                  ),
+                  Text("",
                   style: TextStyle(
                     fontSize: 25
                   ),
@@ -97,26 +131,26 @@ class _HomePageState extends State<HomePage> {
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: const [
+                children:  [
                 
                 Text("Nem Oranı",style: TextStyle(fontSize: 20)),
-                Text("81%",style: TextStyle(fontSize: 20))
+                Text("${myWeather.humidity}%",style: TextStyle(fontSize: 20))
 
               ],),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: const [
+                children:  [
                 
                 Text("Basınç",style: TextStyle(fontSize: 20)),
-                Text("1050 mBar",style: TextStyle(fontSize: 20))
+                Text("${myWeather.pressure} mBar",style: TextStyle(fontSize: 20))
 
               ],),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: const [
+                children:  [
                 
                 Text("Uv İndeksi",style: TextStyle(fontSize: 20)),
-                Text("Düşük,0",style: TextStyle(fontSize: 20))
+                Text("${myWeather.getUv()},${myWeather.uvIndex}",style: TextStyle(fontSize: 20))
 
               ],)
 
@@ -124,32 +158,72 @@ class _HomePageState extends State<HomePage> {
             ),
 
           ),
+          Text("Yağış",style: TextStyle(fontSize: 20),),
           Container(
             height: 160,
             decoration: const BoxDecoration(
               border: Border(bottom: BorderSide(color: Colors.black,width: 2))
             ),
             child: ListView.builder(
-              itemCount: 10,
+              itemCount: rainForcast.length,
             scrollDirection: Axis.horizontal, 
             itemBuilder: (BuildContext context, int index) { 
             return Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children:[
-                const Text("10%",
+                 Text("${rainForcast[index].rainRatio}%",
                 style: TextStyle(
                   fontSize: 15
                 ),),
                 Container(
                   
                   child: Image.file(
-                    drop,
+                    rainForcast[index].img,
                     width: 70,
                     height: 70,
                     ),
                 ),
-                const Text("0.0",style: TextStyle(
+                 Text("${rainForcast[index].hour}",style: TextStyle(
+                  fontSize: 15
+                ),)
+
+              ]
+              ),
+            );
+
+            },
+          
+            ) ,
+          ),
+          Text("Rüzgar",style: TextStyle(fontSize: 20),),
+          Container(
+            height: 160,
+            decoration: const BoxDecoration(
+              border: Border(bottom: BorderSide(color: Colors.black,width: 2))
+            ),
+            child: ListView.builder(
+              itemCount: rainForcast.length,
+            scrollDirection: Axis.horizontal, 
+            itemBuilder: (BuildContext context, int index) { 
+            return Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children:[
+                 Text("${windForcast[index].windRatio}%",
+                style: TextStyle(
+                  fontSize: 15
+                ),
+                ),
+                Transform.rotate(
+                  angle: windForcast[index].windRatio,
+                  child: Image.file(
+                    windForcast[index].img,
+                    width: 70,
+                    height: 70,
+                    ),
+                ),
+                 Text("${windForcast[index].hour}",style: TextStyle(
                   fontSize: 15
                 ),)
 

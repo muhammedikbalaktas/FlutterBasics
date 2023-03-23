@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:weather_app/classes/weather.dart';
 import 'package:weather_app/main_pages/home_page.dart';
 import 'package:weather_app/main_pages/second_page.dart';
 import 'package:weather_app/main_pages/third_page.dart';
+import 'package:weather_app/main_pages/trial_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -13,12 +15,29 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.pink,
       ),
       home: Scaffold(
+
+        // floatingActionButton: FloatingActionButton(
+        //   onPressed: (){
+
+        //   },
+        // ),
+        // drawer: Drawer(
+        //   child: ListView.builder(
+        //     itemCount: 1,
+        //     itemBuilder: (BuildContext context, int index) {
+        //       return ;
+        //     },
+        //   ),
+          
+        // ),
+        
         appBar: AppBar(
           title: const Text("Istanbul",style: TextStyle(fontSize: 50),),
           centerTitle: true,
@@ -39,6 +58,7 @@ class RootPage extends StatefulWidget {
 class _RootPageState extends State<RootPage> {
   int index = 0;
   List<Widget> pages=[
+    // const HomePage(),
     const HomePage(),
     const SecondPage(),
     const InputOutput()
@@ -91,6 +111,8 @@ class _RootPageState extends State<RootPage> {
             Expanded(
               child: TextButton(onPressed: () {
               index=2;
+              
+              
               setState(() {
                 
               });

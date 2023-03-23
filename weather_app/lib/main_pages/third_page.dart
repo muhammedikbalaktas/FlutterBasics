@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:weather_app/classes/card_view.dart';
+
 
 class InputOutput extends StatefulWidget {
   const InputOutput({super.key});
